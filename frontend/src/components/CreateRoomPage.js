@@ -9,9 +9,10 @@ import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateRoomPage(){
+    const navigate = useNavigate();
 
     const [room, setRoom] = useState({
                 guestCanPause: true,
@@ -43,8 +44,8 @@ export default function CreateRoomPage(){
         };
         
         fetch('/api/create-room/', requestOptions)
-            .then((response) => response.json())
-            .then((data) => console.log(data));
+            .then(response => response.json())
+            .then(data => navigate('/room/' + data.code));
     }
 
     return (

@@ -1,34 +1,50 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid"
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
+import React, {useState} from "react";
+import { TextField, Button, Grid, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 
 export default function RoomJoinPage(){
-    defaultVotes: Number = 2
+    const [input, setInput] = useState({
+        roomCode: "",
+        error: ""
+    })
+
+    const handleSubmit = (event) => {
+        console.log(event)
+    }
+
+    const handleTextChange = (e) => {
+        setInput(prevInput => {
+            return {...prevInput, roomCode: e.target.value}
+        })
+    }
 
     return (
-        <Grid container spacing={1}>
-            <Grid item xs={12} align="center">
-                <Typography component='h4' variant='h4'>
-                    join
+        <Grid spacing={1} align="center">
+            <Grid item xs={12}>
+                <Typography variant="h4" component="h4">
+                    Join a Room
                 </Typography>
             </Grid>
-            <Grid item xs={12} align="center">
-                <FormControl component="fieldset">
-                    <FormHelperText>
-                        <div align="center">
-                            guest control of playback state
-                        </div>
-                    </FormHelperText>
-                </FormControl>
+            <Grid item xs={12}>
+                <TextField 
+                    error={input.error} 
+                    label="Code" 
+                    placeholder="Enter a Room Code"
+                    Value={input.roomCode}
+                    helperText={input.error}
+                    variant="outlined" 
+                    onChange={handleTextChange}/>
+            </Grid>
+            <Grid item xs={12}>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Enter Room
+                </Button>
+            </Grid>
+            <Grid item xs={12}>
+                <Button variant="contained" color="secondary" to="/" component={Link}>
+                    Back
+                </Button>
             </Grid>
         </Grid>
     )
