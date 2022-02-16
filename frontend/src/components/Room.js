@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { TextField, Button, ButtonGroup, Grid, Typography } from "@material-ui/core";
 
 export default function Room(){
@@ -10,6 +10,12 @@ export default function Room(){
     });
 
     const { roomCode } = useParams();
+    const navigate = useNavigate();
+    
+    const handlerLeaveRoom = () => {
+        fetch('/api/leave-room')
+            .then(response => navigate('/'))
+    }
 
     useEffect(() => {
         fetch('/api/get-room' + '?code=' + roomCode)
@@ -23,15 +29,6 @@ export default function Room(){
             );
     }, [])
 
-        /*
-            <div>
-            <h3>{roomCode}</h3>
-            <p>votes: {room.votesToSkip}</p>
-            <p>able to pause: {room.guestCanPause.toString()}</p>
-            <p>host: {room.isHost.toString()}</p>
-        </div>
-
-         */
 
     return(
         <Grid container spacing={1} align="center">
@@ -41,28 +38,25 @@ export default function Room(){
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="h6" component="h4">
+                <Typography variant="h6" component="h6">
                     Votes to skip the song: {room.votesToSkip}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="h6" component="h4">
-                    {room.guestCanPause ? "Se puede pausar" : room.guestCanPause && room.isHost ? "Se puede pausar" : "No puede pausar"}
+                <Typography variant="h6" component="h6">
+                    {room.guestCanPause ? "Able to pause" : room.guestCanPause && room.isHost ? "Able to pause" : "Not able to pause"}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="h6" component="h4">
-                    You are in the Room {roomCode}
+                <Typography variant="h6" component="h6">
+                    {room.isHost ? "You are the Host of the Room" : "You are a guest"}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
             </Grid>
             <Grid item xs={12}>
                 <ButtonGroup disableElevation variant="contained" color="primary">
-                    <Button color="primary" to="/join" component={Link}>
-                        something
-                    </Button>
-                    <Button color="secondary" to="/" component={Link}>
+                    <Button color="secondary" onClick={handlerLeaveRoom}>
                         Leave Room
                     </Button>
                 </ButtonGroup>
