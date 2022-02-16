@@ -1,16 +1,34 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { TextField, Button, Grid, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
 
 export default function RoomJoinPage(){
+    const navigate = useNavigate();
     const [input, setInput] = useState({
         roomCode: "",
         error: ""
     })
 
     const handleSubmit = (event) => {
-        console.log(event)
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                code: input.roomCode,
+            }),
+        };
+
+        fetch('/api/join-room', requestOptions)
+            .then(response => {
+                if (response.ok){
+                    navigate('/room/' + input.roomCode)
+                } else{
+                    setInput(prevInput => {
+                        return {...prevInput, error: "Room not found."}
+                    })
+                }
+            }).catch(error => console.log(error))
     }
 
     const handleTextChange = (e) => {
@@ -20,7 +38,7 @@ export default function RoomJoinPage(){
     }
 
     return (
-        <Grid spacing={1} align="center">
+        <Grid container spacing={1} align="center">
             <Grid item xs={12}>
                 <Typography variant="h4" component="h4">
                     Join a Room
